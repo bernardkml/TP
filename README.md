@@ -1,4 +1,4 @@
 # TP
 
 
-Ce dossier contient mes codes pour les TP de Programmation 2.
+Ce dossier contient les codes pour les TP de Programmation 2.
