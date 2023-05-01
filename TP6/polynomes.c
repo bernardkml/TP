@@ -5,102 +5,77 @@
 
 /* declaration constantes et types utilisateurs */
 
-typedef struct polynome {
+struct polynome {
     int * coefficient; 
     int taille;
     int degre;
-} polynome;
+};
 
 /* declaration de fonctions utilisateurs */
 
-polynome * creer_polynome(unsigned int taille);
-void afficher_polynome(const struct polynome *p);
-polynome * scalaire_polynome(polynome * p,  int a);
-void reformater_polynome(polynome * p);
-polynome * additioner_polynome(const polynome *p, const struct polynome *q);
-polynome * deriver_polynome(polynome *p);
-polynome * multiplier_polynome(polynome * p, polynome * q);
-void detruire_polynome(polynome **p);
+struct polynome * creer_polynome(unsigned int taille);
+struct polynome * alea_init_polynome(unsigned int d);
+void afficher_polynome(struct polynome *p);
+struct polynome * scalaire_polynome(struct polynome * p,  int a);
+void reformater_polynome(struct polynome * p);
+struct polynome * additioner_polynome(const struct polynome *p, const struct polynome *q);
+struct polynome * deriver_polynome(struct polynome *p);
+struct polynome * multiplier_polynome(struct polynome * p,struct polynome * q);
+void detruire(struct polynome **p);
 /* fonction principale */
 int main(int argc, char **argv)
 {
     /* declaration et initialisation des variables */
-    int dmin, dmax, λ;
-    polynome *p, *q, *dp, *sp, *mp;
+    int dmin, dmax;
+    struct polynome *p, *q;
     /* ici faire quelque chose */
     srand(time(NULL));
-    if (argc != 3)
-    {
-        printf("T'es bêtes ou quoi ???? 🤣🫵\n");
-        return EXIT_FAILURE;
-    }
+    
+    if ((argc != 3) || (argv[2] <= argv[1]))
+        {
+            printf("T'es bêtes ou quoi ???? 🤣🫵\nrentre 2 nombres nan !\n");
+            return EXIT_FAILURE;
+        }
+
     dmin = atoi(argv[1]);
     dmax = atoi(argv[2]);
-    p = creer_polynome(dmax);
-    q = creer_polynome(dmin);
-    p->coefficient[0] = rand()%19-9;
-	p->coefficient[1] = rand()%19-9;
-	p->coefficient[2] = rand()%19-9;
-	p->degre = rand()%8;
-	q->coefficient[0] = rand()%19-9;
-	q->coefficient[1] = rand()%19-9;
-	q->coefficient[2] = rand()%19-9;
-	q->degre = rand()%8;
+    p = alea_init_polynome(dmax);
+    q = alea_init_polynome(dmin);
     printf("Polynôme p : ");
     afficher_polynome(p);
     printf("\n");
 	printf("Polynôme q : ");
 	afficher_polynome(q);
     printf("\n");
-    λ = rand()%8;
-    sp = scalaire_polynome(p, λ);
-	printf("multiplication de p par le scalaire λ = %d : ", λ);
-	afficher_polynome(sp);
+    printf("Polynôme q affichant le produit de p et q : ");
+    q = multiplier_polynome(p,q);
+    afficher_polynome(q);
     printf("\n");
-    mp = multiplier_polynome(p, q);
-	printf("multiplication de p par q : ");
-	afficher_polynome(mp);
-    printf("\n");
-    dp = deriver_polynome(p);
-	printf("polynôme dérivé de p : ");
-	afficher_polynome(dp);
     printf("\n");
 
-    detruire_polynome(&p);
-	detruire_polynome(&q);
-	detruire_polynome(&sp);
-	detruire_polynome(&mp);
-	detruire_polynome(&dp);
+    detruire(&p);
+	detruire(&q);
 
     /* valeur fonction */
     return EXIT_SUCCESS;
 }
 
 /* definitions des fonctions utilisateurs */
-int minimum(int x, int y)
+struct polynome * alea_init_polynome(unsigned int d)
 {
-    if (x < y)
+    srand(time(NULL));
+    struct polynome * test = creer_polynome(d);
+    test->degre = d;
+    for (int i = 0; i < test->degre; ++i)
     {
-        return x;
-    } else {
-        return y;
-    }
-    
-}
-int maximum(int x, int y)
-{
-    if (x > y)
-    {
-        return x;
-    } else {
-        return y;
-    }
-    
-}
+        test->coefficient[i] = rand()%18;
+    } 
 
-polynome * creer_polynome(unsigned int taille)
+    return test;   
+}
+struct polynome * creer_polynome(unsigned int taille)
 {
-    polynome * res = malloc(sizeof(polynome));
+    struct polynome * res = malloc(sizeof(struct polynome));
     if (res == NULL)
     {
         perror("Echec d'allocution");
@@ -112,7 +87,7 @@ polynome * creer_polynome(unsigned int taille)
 
     return res;
 }
-void afficher_polynome(const polynome *p)
+void afficher_polynome(struct polynome * p)
 {
 	if (p == NULL) {
 		printf("NULL");
@@ -134,9 +109,9 @@ void afficher_polynome(const polynome *p)
 	printf ("\n");
 }
 
-polynome * scalaire_polynome(polynome * p, int a)
+struct polynome * scalaire_polynome(struct polynome * p, int a)
 {
-    polynome * sp = creer_polynome(p->taille);
+    struct polynome * sp = creer_polynome(p->taille);
     if (sp == NULL)
     {
         perror("Echec d'allocution");
@@ -159,7 +134,7 @@ polynome * scalaire_polynome(polynome * p, int a)
 
 
 
-void reformater_polynome(polynome * p)
+void reformater_polynome(struct polynome * p)
 {
    int * nouv_coeff = NULL;
     if (p->taille > p->degre+1)
@@ -177,9 +152,9 @@ void reformater_polynome(polynome * p)
 
 
 
-polynome * deriver_polynome(polynome *p)
+struct polynome * deriver_polynome(struct polynome *p)
 {
-    polynome* dp = creer_polynome(p->taille - 1);
+    struct polynome* dp = creer_polynome(p->taille - 1);
 	dp->degre = p->degre - 1;
 
 	for (int i = 1; i < dp->taille; i++) {
@@ -189,10 +164,10 @@ polynome * deriver_polynome(polynome *p)
 	return dp;
 }
 
-polynome * multiplier_polynome(polynome * p, polynome * q)
+struct polynome * multiplier_polynome(struct polynome * p, struct polynome * q)
 {
 
-	polynome* mp = creer_polynome(p->degre + q->degre + 1);
+	struct polynome* mp = creer_polynome(p->degre + q->degre + 1);
 	mp->degre = p->degre + q->degre;
     if (mp == NULL)
     {
@@ -213,7 +188,38 @@ polynome * multiplier_polynome(polynome * p, polynome * q)
 	return mp;
 }
 
-void detruire_polynome(polynome **p)
+void detruire_polynome(struct polynome **p)
+{
+    free((*p)->coefficient);
+    free(*p);
+    *p = NULL;
+}
+
+struct polynome * additioner_polynome(const struct polynome * p,const struct polynome * q)
+{
+
+	struct polynome* ap = creer_polynome(p->degre + q->degre + 1);
+	ap->degre = p->degre + q->degre;
+    if (ap == NULL)
+    {
+        perror("Echec d'allocution");
+        exit(2);
+    }
+
+    for (int i = 0; i < ap->taille; i++) {
+		ap->coefficient[i] = 0;
+	}
+	for (int i = 0; i < p->taille; i++)
+    {
+        for (int j = 0; j < q->taille; j++)
+        {
+            ap->coefficient[i] += p->coefficient[i] + q->coefficient[j];
+        }
+    }
+	return ap;
+}
+
+void detruire(struct polynome **p)
 {
     free((*p)->coefficient);
     free(*p);
