@@ -6,26 +6,26 @@
 
 
 /* declaration constantes et types utilisateurs */ 
-#define TAILLE_MAX 50 /* pour la fonction initialiser_tab_operas_fichier */
+#define TAILLE_MAX 17 /* pour la fonction initialiser_tab_operas_fichier */
 #define ENTREE argv[1] /* Nom du fichier pour initialiser le tableau d'adresses d'opÃ©ras */
-typedef struct date {
+struct date {
 	unsigned jour;
 	unsigned mois;
 	unsigned annee;
-} date ;
+};
 
-typedef struct individu {
+struct individu {
 		char * nom;
 		char * prenom;
 		struct date * naissance;
-} individu;
+};
 
-typedef struct opera {
+struct opera {
 	char * titre; /* le titre de l'opÃ©ra */
 	struct date * date_creation; /* l'annÃ©e de la crÃ©ation (i.e. de la premiÃ¨re reprÃ©sentation) */
 	char * ville_creation; /* ville de la crÃ©ation (i.e. de la premiÃ¨re reprÃ©sentation) */
 	struct individu * compositeur; /* nom du compositeur */
-} opera ;
+};
 
 
 /* declaration de fonctions utilisateurs */
@@ -47,18 +47,42 @@ struct opera ** allouer_tab_opera (int taille);
 char * allouer_chaine (int n);
 struct date * allouer_date (void);
 struct individu * allouer_individu (void);
+void recherche_dicho_tab_opéra(const struct opera * tab, int n, int a);
 int main()
 {
     /* declaration et initialisation des variables */
     int  n = TAILLE_MAX;
-    opera ** tab =  initialiser_tab_opera_fichier("Operas_entree.txt",&n);
+    struct opera ** tab =  initialiser_tab_opera_fichier("Operas_entree.txt",&n);
     /* ici faire quelque chose */
+	printf("Affichages des Opéras : \n\n");
     for (int i = 0; i < n; ++i)
     {
         afficher_opera(tab[i]);
         printf("\n\n");
     }
-    
+	printf("Affichage des Opéras avant que leur compositeur est 40 piges révolus: \n\n");
+	recherche_tab_opera_age(tab, n, 40);
+	for (int l = 0; l < n; ++l)
+    {
+        afficher_opera(tab[l]);
+        printf("\n\n");
+    }
+	printf("Affichage après avoir réordonné le tableau selon l'odre chronologiqe des créations: \n\n");
+	trier_tab_opera_creation(tab,n);
+	for (int j = 0; j < n; j++)
+	{
+		afficher_opera(tab[j]);
+		printf("\n\n");
+	}
+	printf("Affichage des Opéras après avoir placé tous les operas créé a Paris au début du tableau: \n\n");
+	reorganiser_tab_opera_ville(tab, n, "Paris");
+	for (int k = 0; k < n; k++)
+	{
+		afficher_opera(tab[k]);
+		printf("\n\n");
+	}
+
+	detruire_opera(tab);
     /* valeur fonction */
     return EXIT_SUCCESS;
 }
@@ -125,6 +149,8 @@ void trier_tab_opera_creation (struct opera *tab[], int taille) {
     echanger_opera(&tab[i], &tab[i + pos_opera_ancien]);
   }
 }
+
+
 
 /** Fonction qui renvoie -1 si d1 est antÃ©rieure Ã  d2, */
 /**          qui renvoie 1 si d1 est postÃ©rieure Ã  d2, */
@@ -302,3 +328,24 @@ struct individu * allouer_individu (void) {
 	}
   return ind;
 }
+
+//void recherche_dicho_tab_opéra(const struct opera * tab, int n, int a)
+//{
+//	if (n <= 0)
+//	{
+//		printf("T'es bêtes ou quoi ?\n");
+//	} 
+//	switch (tab->date_creation->annee == a)
+//	{
+//	case 1:
+//		afficher_opera(tab);
+//		break;
+//	
+//	default:
+//		recherche_dicho_tab_opéra(tab+1,n-1,a);
+//		break;
+//	} 
+//	printf("Y'a aps !\n");
+//
+
+//}
