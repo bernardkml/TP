@@ -1,5 +1,5 @@
-all: date.o individu.o laureat.o main_turing.o
-	gcc date.o individu.o main_turing.o laureat.o -o prog_turing
+all: date.o individu.o opera.o main_opera.o
+	gcc date.o individu.o main_opera.o opera.o -o prog_opera
 
 date.o: date.c date.h
 	gcc -c -Wall -ansi -Wfatal-errors date.c
@@ -7,11 +7,11 @@ date.o: date.c date.h
 individu.o: individu.c individu.h date.h
 	gcc -c -Wall -ansi -Wfatal-errors individu.c
 
-laureat.o: laureat.c laureat.h individu.h date.h
-		gcc -c -Wall -ansi -Wfatal-errors laureat.c
+opera.o: opera.c opera.h individu.h date.h
+	gcc -c -Wall -ansi -Wfatal-errors opera.c
 
-main_turing.o: main_turing.c laureat.h individu.h date.h
-	gcc -c -Wall -ansi -Wfatal-errors main_turing.c
+main_opera.o: main_opera.c opera.h individu.h date.h
+	gcc -c -Wall -ansi -Wfatal-errors main_opera.c
 
 clean:
-	rm *.o prog_turing
+	rm *.o prog_opera

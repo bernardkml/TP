@@ -10,10 +10,9 @@ struct individu {
 		char * origine; /* ville de naissance */
 };
 
-/** Fonction qui alloue l'espace mémoire sur tas pour un individu */
-/* qu'elle initialise champ par champ avec les paramètres d'entrée */
+/* Fonction qui alloue l'espace mémoire sur tas pour un individu */
 /** et renvoie l'adresse du bloc alloué pour l'individu */
-struct individu * allouer_init_individu (const char *prenom, const char *nom, const struct date *d_naissance, const char *origine);
+struct individu * allouer_individu (void);
 
 /** Fonction qui libère toute la mémoire occupée sur le tas */
 /* par l'individu dont l'adresse est pointée par ind */
