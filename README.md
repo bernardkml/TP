@@ -1,6 +1,6 @@
 # TP
 
 
-Ce dossier contient les codes pour les TPs de Programmation 2.
+Ce dossier contient les codes pour les TPs de Programmation 2 (pretty wacked but still useful).
 
-i made this in 5.61min w/ 2 spliffs and an apple pie (of course im kidding )
+
